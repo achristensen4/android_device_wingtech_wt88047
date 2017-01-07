@@ -160,7 +160,7 @@ on boot
 
 on charger
    wait /dev/block/bootdevice/by-name/system
-   mount ext4 /dev/block/bootdevice/by-name/system /system ro barrier=1
+   mount ext4 /dev/block/bootdevice/by-name/system /system rw nosuid nodev barrier=1
    chown root system /sys/class/power_supply/battery/current_now
    chown root system /sys/class/power_supply/battery/voltage_now
    chmod 0664 /sys/class/power_supply/battery/current_now
@@ -186,7 +186,6 @@ service imsdatadaemon /system/bin/imsdatadaemon
     user system
     socket ims_datad stream 0660 system radio
     group system wifi radio inet net_raw log qcom_diag net_admin
-    disabled
 
 on property:sys.ims.QMI_DAEMON_STATUS=1
     start imsdatadaemon
@@ -196,13 +195,11 @@ service ims_rtp_daemon /system/bin/ims_rtp_daemon
    user system
    socket ims_rtpd stream 0660 system radio
    group radio net_raw diag qcom_diag log
-   disabled
 
 service imscmservice /system/bin/imscmservice
    class main
    user system
    group radio net_raw diag qcom_diag log
-   disabled
 
 on property:sys.ims.DATA_DAEMON_STATUS=1
     start ims_rtp_daemon
@@ -211,7 +208,7 @@ on property:sys.ims.DATA_DAEMON_STATUS=1
 service memcheck /system/bin/memcheck
     user root
     group root
-    class late_start
+    class main
     oneshot
 
 on property:sys.boot_completed=1
@@ -220,6 +217,5 @@ on property:sys.boot_completed=1
 service config_lineout /system/bin/sh /system/etc/init.lineout.sh
     user root
     group root
-    class late_start
+    class main
     oneshot
-    disabled
